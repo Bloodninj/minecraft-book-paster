@@ -1,0 +1,37 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    /* font-family: Minecraft; */
+    font-size: 13px;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: lightgrey;
+}
+
+@font-face {
+    font-family: Minecraft !important;
+    src: local("Minecraft Regular"),
+        url(MinecraftRegular.woff2) format("woff2"),
+        url(MinecraftRegular.woff) format("woff");
+}
+
+.mc-font {
+    font-family: Minecraft, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+.red-text {
+    color: red;
+}
+
+.orange-text {
+    color: darkorange;
+}
