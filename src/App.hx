@@ -4,6 +4,8 @@ import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.VBox;
 import Math;
 
+typedef WordData = {pages:Array<String>, linePixCount:Int, wordPixCount:Int};
+
 @:build(haxe.ui.macros.ComponentMacros.build("assets/main-view.xml"))
 class App extends VBox {
 
@@ -64,7 +66,6 @@ class App extends VBox {
         var newLineCount:Int = 0;
         var linePixCount:Int = 0;
         var wordPixCount:Int = 0;
-        var wordIndex:Int = 0;
         var paragraphs = [];
 
         // Reset vars
@@ -79,103 +80,93 @@ class App extends VBox {
         {
             var pg = paragraphs[i];
             trace('==NEW PARAGRAPH==:\n$pg');
-            wordIndex = 0;
-            linePixCount = 0;
-            if (newLineCount < 14) {
-                var words:Array<String> = pg.split(" ");
-                if (words.length > 1)
+            // linePixCount = 0;
+            var words:Array<String> = pg.split(" ");
+            if (words.length > 1)
+            {
+                for (j in 0...words.length)
                 {
-                    for (j in 0...words.length)
+                    var word = words[j];
+                    if (word != "\n" && word != "" && word != " ")
                     {
-                        var word = words[j];
-                        wordIndex++;
-                        if (word != "\n" && word != "" && word != " ")
+                        wordPixCount = 0;
+                        trace('+ Word \"$word\" has ${word.length} characters');
+                        for (x in 0...word.length)
                         {
-                            wordPixCount = 0;
-                            trace('+ Word \"$word\" has ${word.length} characters');
-                            for (x in 0...word.length)
+                            wordPixCount += getCharWidth(word.charAt(x));
+                            if (x < word.length)
                             {
-                                wordPixCount += getCharWidth(word.charAt(x));
-                                if (x < word.length-1)
-                                {
-                                    wordPixCount++;
-                                }
-                            }
-                            trace('It is $wordPixCount pixels long.');
-                            trace('linePixCount is $linePixCount, wordPixCount is $wordPixCount.');
-                            trace('Current newLineCount is $newLineCount.');
-                            if (linePixCount + wordPixCount + 3 < maxWidth)
-                            {
-                                trace('Word can fit plus a space');
-                                pages[this.pageCount] += word;
-                                linePixCount += wordPixCount;
-                                // Don't go out of bounds of words array
-                                if (j+1 <= words.length - 1)
-                                {
-                                    // Check to see if next word will end up on a new line
-                                    // If so, don't add trailing space
-                                    var nextWord:String = words[j+1];
-                                    var nextWordPixCount:Int = 0;
-                                    trace('The next word \"$nextWord\" has ${nextWord.length} characters');
-                                    for (x in 0...nextWord.length)
-                                    {
-                                        nextWordPixCount += getCharWidth(word.charAt(x));
-                                        if (x < nextWord.length-1)
-                                        {
-                                            nextWordPixCount++;
-                                        }
-                                    }
-                                    trace('The next word $nextWord is $nextWordPixCount pixels wide, making the line ${linePixCount + 3 + nextWordPixCount} pixels wide.');
-                                    if (linePixCount + 3 + nextWordPixCount > maxWidth)
-                                    {
-                                        trace('Next word will end up on a new line, not adding trailing space.');
-                                    }
-                                    else
-                                    {
-                                        pages[this.pageCount] += " ";
-                                        linePixCount += 3;
-                                    }
-                                }
-                            }
-                            // else if (linePixCount + wordPixCount < maxWidth)
-                            // {
-                            //     trace('Word can fit with no space');
-                            //     pages[this.pageCount] += word;
-                            //     linePixCount += wordPixCount + 3;
-                            // }
-                            else
-                            {
-                                trace("Word can't fit on current line");                
-                                newLineCount++;
-                                trace('\n--- NEW LINE COUNT is $newLineCount---\n');
-                                if (newLineCount == 14) {
-                                    trace('Page count is ${this.pageCount}, increasing it.');
-                                    this.pageCount++;
-                                    trace('\n\n---NEW PAGE COUNT is ${this.pageCount}---\n\n');
-                                    pages[this.pageCount] = "";
-                                    newLineCount = 0;
-                                    linePixCount = 0;
-                                }
-                                if (newLineCount > 0)
-                                {
-                                    linePixCount = wordPixCount + 3;
-                                    pages[this.pageCount] += "\n" + word + " ";
-                                }
-                                else
-                                {
-                                    linePixCount = wordPixCount + 3;
-                                    pages[this.pageCount] += word + " ";
-                                }
+                                wordPixCount++;
                             }
                         }
-                        trace('New linePixCount is $linePixCount.');
+                        trace('It is $wordPixCount pixels long.');
+                        trace('linePixCount is $linePixCount, wordPixCount is $wordPixCount.');
+                        trace('Current newLineCount is $newLineCount.');
+                        if (linePixCount + wordPixCount < maxWidth)
+                        {
+                            trace('Word can fit');
+                            var returnData:WordData = addWordToPage(word,pages,words,j,linePixCount,wordPixCount);
+                            pages = returnData.pages;
+                            linePixCount = returnData.linePixCount;
+                            wordPixCount = returnData.wordPixCount;
+                            if (linePixCount + 3 <= maxWidth)
+                            {
+                                pages[this.pageCount] += " ";
+                                linePixCount += 3;
+                            }
+                        }
+                        // else if (linePixCount + wordPixCount < maxWidth)
+                        // {
+                        //     trace('Word can fit with no space');
+                        //     pages[this.pageCount] += word;
+                        //     linePixCount += wordPixCount + 3;
+                        // }
+                        else
+                        {
+                            trace("Word can't fit on current line");                
+                            newLineCount++;
+                            trace('\n--- NEW LINE COUNT is $newLineCount---\n');
+                            if (newLineCount == 14) {
+                                trace('Page count is ${this.pageCount}, increasing it.');
+                                this.pageCount++;
+                                trace('\n\n---NEW PAGE COUNT is ${this.pageCount}---\n\n');
+                                pages[this.pageCount] = "";
+                                newLineCount = 0;
+                            }
+                            linePixCount = 0;
+                            
+                            
+                            // if (newLineCount > 0)
+                            // {
+                            //     linePixCount = wordPixCount + 3;
+                            //     // pages[this.pageCount] += "\n" + word + " ";
+                            //     pages[this.pageCount] += word + " ";
+                            // }
+                            // else
+                            // {
+                            //     linePixCount = wordPixCount + 3;
+                            //     pages[this.pageCount] += word + " ";
+                            // }
+                            var returnData:WordData = addWordToPage(word,pages,words,j,linePixCount,wordPixCount);
+                            pages = returnData.pages;
+                            linePixCount = returnData.linePixCount;
+                            wordPixCount = returnData.wordPixCount;
+
+                            if (linePixCount + 3 <= maxWidth)
+                            {
+                                pages[this.pageCount] += " ";
+                                linePixCount += 3;
+                            }
+                        }
                     }
+                    trace('New linePixCount is $linePixCount.');
                 }
             }
             if (newLineCount < 13)
             {
                 pages[this.pageCount] += "\n";
                 newLineCount++;
+                linePixCount = 0;
             }
         }
         pageCount = this.pageCount;
@@ -200,6 +191,38 @@ class App extends VBox {
         }
         trace("\n=== DONE ===\n");
         return pages;
+    }
+
+    function addWordToPage(currentWord:String,pages:Array<String>,words:Array<String>,wordIndex:Int,linePixCount:Int,wordPixCount:Int):WordData {
+        pages[this.pageCount] += currentWord;
+        linePixCount += wordPixCount;
+        // Don't go out of bounds of words array
+        // if (wordIndex+1 <= words.length - 1)
+        // {
+        //     // Check to see if next word will end up on a new line
+        //     // If so, don't add trailing space
+        //     var nextWord:String = words[wordIndex+1];
+        //     var nextWordPixCount:Int = 0;
+        //     trace('The next word \"$nextWord\" has ${nextWord.length} characters');
+        //     for (x in 0...nextWord.length)
+        //     {
+        //         nextWordPixCount += getCharWidth(currentWord.charAt(x));
+        //         if (x < nextWord.length-1)
+        //         {
+        //             nextWordPixCount++;
+        //         }
+        //     }
+        //     trace('The next word $nextWord is $nextWordPixCount pixels wide, making the line ${linePixCount + 3 + nextWordPixCount} pixels wide.');
+            // if (linePixCount + 3 + nextWordPixCount > maxWidth)
+            // {
+            //     trace('Next word will end up on a new line, not adding trailing space.');
+            // }
+            // else
+            // {
+                // pages[this.pageCount] += " ";
+                // linePixCount += 3;
+            // }
+        return {pages: pages, linePixCount: linePixCount, wordPixCount: wordPixCount};
     }
 
     /**
