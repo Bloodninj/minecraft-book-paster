@@ -5,9 +5,7 @@ import haxe.ui.HaxeUIApp;
 
 class Main {
     public static function main() {
-        Toolkit.init({
-            container: js.Browser.document.getElementById("appContainer")
-        });
+        Toolkit.init();
         var app = new HaxeUIApp();
         // Toolkit.theme = "native";
         app.ready(function() {

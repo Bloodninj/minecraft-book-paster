@@ -1,20 +1,26 @@
-<vbox width="1024" height="768" style="padding: 0.5rem; spacing: 0.25rem">
+<vbox width="1024" height="768" style="padding: 0.5rem; spacing: 0.25rem" horizontalAlign="center">
     <grid width="100%" height="500" columns="2" style="border: 0.1rem solid black; border-radius: 0.2rem; padding: 0.5rem; spacing: 0.5rem">
         <textarea width="50%" height="100%" style="padding: 0.5rem; font-family: Minecraft" placeholder="Enter some text..." id="textField" />
         <textarea width="50%" height="100%" style="padding: 0.5rem; font-family: Minecraft" placeholder="Enter some text..." id="textField2" />
     </grid>
     <grid width="100%" columns="2" style="padding: 0.5rem; spacing: 0.5rem">
-        <hbox width="100%" style="padding: 0.5rem; spacing: 0.5rem">
+        <hbox width="100%" style="padding: 0.5rem; spacing: 0.5rem" horizontalAlign="center">
             <button text="Button 1" id="button1" style="font-family: Minecraft" />
             <button text="Button 2" id="button2" style="font-family: Minecraft" />
         </hbox>
-        <grid columns="2" width="100%" style="padding: 0.5rem; spacing: 0.5rem; vertical-align: center">
-            <hbox>
+        
+        <hbox width="100%" horizontalAlign="center">
+            <vbox verticalAlign="center" horizontalAlign="left">
                 <button text="Previous page" id="previousPageButton" style="font-family: Minecraft" />
+                <button text="Previous & copy" id="previousCopyButton" style="font-family: Minecraft" />
+            </vbox>
+            <label text="Label text here" id="pageCountLabel" verticalAlign="center" horizontalAlign="center" />
+            <vbox verticalAlign="center" horizontalAlign="right">
                 <button text="Next page" id="nextPageButton" style="font-family: Minecraft" />
-            </hbox>
-            <label text="Label text here" id="pageCountLabel" />
-        </grid>
+                <button text="Next & copy" id="nextCopyButton" style="font-family: Minecraft" />
+            </vbox>
+        </hbox>
+
     </grid>
     <label id="errorLabel" text="" style="color:red" />
 </vbox>

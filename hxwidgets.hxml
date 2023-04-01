@@ -2,6 +2,6 @@
 -main Main
 
 -lib haxeui-core
--lib haxeui-html5
+-lib haxeui-hxwidgets
 
--js build/html5/Main.js
+-cpp build/hxwidgets
