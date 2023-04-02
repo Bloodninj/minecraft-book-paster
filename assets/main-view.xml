@@ -1,7 +1,11 @@
 <vbox style="padding: 0.5rem; spacing: 0.25rem" horizontalAlign="center">
     <menubar id="menuBar">
         <menu text="{{menu.file}}" id="fileMenu">
-            <menuitem text="{{menu.file.openFile}}" id="openFileMenuItem" shortcutText="{{menu.file.openFile.shortcut}}" />
+            <menu-item text="{{menu.file.openFile}}" id="openFileMenuItem" shortcutText="{{menu.file.openFile.shortcut}}" />
+        </menu>
+        <menu text="{{menu.language}}">
+            <menu-optionbox text="{{menu.language.english}}" id="languageMenuEnglishItem" value="en" />
+            <menu-optionbox text="{{menu.language.german}}" id="languageMenuGermanItem" value="de-DE" />
         </menu>
     </menubar>
     <grid height="400" style="border: 0.1rem solid black; border-radius: 0.2rem; padding: 0.5rem; spacing: 0.5rem">
