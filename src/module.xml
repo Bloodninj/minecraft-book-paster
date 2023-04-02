@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <resources>
+        <resource path="/assets/locales" prefix="locales" />
+    </resources>
+    <locales>
+        <locale id="en">
+            <resource path="locales/en.properties" />
+        </locale>
+    </locales>
+</module>
