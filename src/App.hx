@@ -1,6 +1,7 @@
 package;
 
 
+import haxe.ui.containers.menus.Menu.MenuEvent;
 #if cpp
 import hx.widgets.Clipboard;
 #end
@@ -28,7 +29,7 @@ class App extends VBox {
     public function new() {
         super();
         // LocaleManager.instance.addStrings("en",new Map<String,String>(),"assets/en.properties");
-        haxe.ui.locale.LocaleManager.instance.language = "en";
+        LocaleManager.instance.language = "en";
         // js.Browser.document.getElementById("appContainer").appendChild(this.element);
         inputTextfield.text = "Et sequi voluptatum voluptatibus. Velit doloremque ipsum autem perspiciatis. Et voluptatem est dolor. Voluptatem molestiae est earum. Repellendus et aut animi impedit. Quia velit quis quas at suscipit.\nSunt aliquid perspiciatis sit sit. Veniam facere culpa excepturi facere accusamus omnis quis ex. Vitae iusto et occaecati. Laborum aut molestiae possimus.\nSit quisquam enim sed natus autem. Veritatis est totam qui debitis tempore. Dolorem aliquid iusto omnis et et.";
         // pageCountLabel.hidden = true;
@@ -293,16 +294,37 @@ class App extends VBox {
         #end
     }
 
-    @:bind(openFileMenuItem, MouseEvent.CLICK)
-    private function openTextFile(e:haxe.ui.events.UIEvent) {
+    @:bind(menuBar, MenuEvent.MENU_SELECTED)
+    private function openTextFile(e:MenuEvent) {
         trace('Attempting to open file dialogue');
-        Dialogs.openTextFile(LocaleManager.instance.lookupString("menu.file.openFile"),[{extension: ".txt", label: LocaleManager.instance.lookupString("menu.file.textFile")}],
-            (info) -> {
-                try {
-                    inputTextfield.text = info.text;
-                } catch (e) {
-                    errorLabel.text = e.message;
+        switch (e.menuItem.id) {
+            case "openFileMenuItem": {
+                Dialogs.openTextFile(LocaleManager.instance.lookupString("menu.file.openFile"),[{extension: "txt", label: LocaleManager.instance.lookupString("menu.file.textFile")}],
+                    (info) -> {
+                        try {
+                            inputTextfield.text = info.text;
+                        } catch (e) {
+                            errorLabel.text = e.message;
+                        }
+                    });
                 }
-            });
+            default: {}
+        }
     }
+
+    @:bind(menuBar, MenuEvent.MENU_SELECTED)
+    private function switchLocale(e:MenuEvent) {
+        switch (e.menuItem.id) {
+            case "languageMenuEnglishItem": {
+                LocaleManager.instance.language = "en";
+                LocaleManager.instance.refreshAll();
+            }
+            case "languageMenuGermanItem": {
+                LocaleManager.instance.language = "de-DE";
+                LocaleManager.instance.refreshAll();
+            }
+            default: {}
+        }
+    }
+    
 }
