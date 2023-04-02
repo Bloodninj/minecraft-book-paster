@@ -41,6 +41,7 @@ class App extends VBox {
         splitText = getSplitLines(inputTextfield.text, pageCount);
         outputTextfield.text = splitText[currentPage];
         // LocaleManager.instance.refreshAll();
+        currentPage = 0;
         updatePages();
     }
 
@@ -83,7 +84,7 @@ class App extends VBox {
     private function onLastCopyButton(e:MouseEvent) {
         if (splitText != null)
         {
-            currentPage = pageCount - 1;
+            currentPage = pageCount;
             updatePages();
         }
         copyOutputText();
@@ -295,7 +296,7 @@ class App extends VBox {
     }
 
     @:bind(menuBar, MenuEvent.MENU_SELECTED)
-    private function openTextFile(e:MenuEvent) {
+    private function handleMenuItems(e:MenuEvent) {
         trace('Attempting to open file dialogue');
         switch (e.menuItem.id) {
             case "openFileMenuItem": {
@@ -308,23 +309,16 @@ class App extends VBox {
                         }
                     });
                 }
+            case "languageMenuEnglishItem": switchLocale("en");
+            case "languageMenuGermanItem": switchLocale("de-DE");
             default: {}
         }
     }
 
-    @:bind(menuBar, MenuEvent.MENU_SELECTED)
-    private function switchLocale(e:MenuEvent) {
-        switch (e.menuItem.id) {
-            case "languageMenuEnglishItem": {
-                LocaleManager.instance.language = "en";
-                LocaleManager.instance.refreshAll();
-            }
-            case "languageMenuGermanItem": {
-                LocaleManager.instance.language = "de-DE";
-                LocaleManager.instance.refreshAll();
-            }
-            default: {}
-        }
+
+    function switchLocale(localeString:String) {
+        LocaleManager.instance.language = localeString;
+        LocaleManager.instance.refreshAll(); 
     }
-    
+
 }
