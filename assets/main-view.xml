@@ -4,8 +4,8 @@
             <menu-item text="{{menu.file.openFile}}" id="openFileMenuItem" shortcutText="{{menu.file.openFile.shortcut}}" />
         </menu>
         <menu text="{{menu.language}}">
-            <menu-optionbox text="{{menu.language.english}}" id="languageMenuEnglishItem" value="en" />
-            <menu-optionbox text="{{menu.language.german}}" id="languageMenuGermanItem" value="de-DE" />
+            <menu-optionbox text="{{menu.language.english}}" id="languageMenuEnglishItem" />
+            <menu-optionbox text="{{menu.language.german}}" id="languageMenuGermanItem" />
         </menu>
     </menubar>
     <grid height="400" style="border: 0.1rem solid black; border-radius: 0.2rem; padding: 0.5rem; spacing: 0.5rem">
