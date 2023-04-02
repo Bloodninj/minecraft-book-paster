@@ -7,5 +7,8 @@
         <locale id="en">
             <resource path="locales/en.properties" />
         </locale>
+        <locale id="de-DE">
+            <resource path="locales/de-DE.properties" />
+        </locale>
     </locales>
 </module>
