@@ -4,4 +4,8 @@
 -lib haxeui-core
 -lib haxeui-hxwidgets
 
+-D haxeui_no_ssl
+-D WXSTATIC
+-D ABI=-MD
+
 -cpp build/hxwidgets
