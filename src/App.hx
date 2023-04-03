@@ -94,7 +94,7 @@ class App extends VBox {
         currentPage = cast Math.max(0,Math.min(currentPage,pageCount));
         // pageCountLabel.text = 'Page ${currentPage+1} of ${pageCount+1}';
         outputTextfield.text = splitText[currentPage];
-        LocaleManager.instance.refreshAll();
+        LocaleManager.instance.refreshFor(pageCountLabel);
     }
 
     /**
@@ -317,8 +317,10 @@ class App extends VBox {
 
 
     function switchLocale(localeString:String) {
+        trace('Attempting to change language from ${LocaleManager.instance.language} to ${localeString}');
         LocaleManager.instance.language = localeString;
-        LocaleManager.instance.refreshAll(); 
+        LocaleManager.instance.refreshAll();
+        trace('New locale: ${LocaleManager.instance.language}');
     }
 
 }
